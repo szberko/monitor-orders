@@ -16,7 +16,7 @@
 int OnInit()
   {
 //---
-    engine();
+    getHistory();
 //---
    return(INIT_SUCCEEDED);
   }
@@ -34,7 +34,7 @@ void OnDeinit(const int reason)
 void OnTick()
   {
 //---
-    
+    getCurrentOrders();
   }
 //+------------------------------------------------------------------+
 
