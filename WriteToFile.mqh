@@ -29,7 +29,7 @@ int writeToCSVFileArray(string fileName, int totalNoOfOrders, Order &orders[]) {
                 "Order Max Positive R",
                 "Order Positive Period in Percent",
                 "Order Positive Period in Seconds",
-                "Order Max Price",
+                "Order Max Negative Price",
                 "Order Max Negative R",
                 "Order Negative Period in Percent",
                 "Order Negative Period in Seconds",

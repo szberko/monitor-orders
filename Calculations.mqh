@@ -21,12 +21,12 @@ double calcReachedR(double orderOpenPrice, double orderClosePrice, double rValue
 //+------------------------------------------------------------------+
 //| Calculate time periods                                           |
 //+------------------------------------------------------------------+
-PeriodOfTime calcPeriod(datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, int orderType, double orderRValue) {
+PeriodOfTime calcPeriod(string orderSymbol, datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, int orderType, double orderRValue) {
   PeriodOfTime periodOfTime;
   periodOfTime.allInSeconds = orderCloseTime - orderOpenTime;
 
-  TimeAndRStatistics statisticsAboveOpenPrice = calcSecondsAboveOpenPrice(orderOpenTime, orderCloseTime, orderOpenPrice, orderRValue);
-  TimeAndRStatistics statisticsBelowOpenPrice = calcSecondsBelowOpenPrice(orderOpenTime, orderCloseTime, orderOpenPrice, orderRValue);
+  TimeAndRStatistics statisticsAboveOpenPrice = calcSecondsAboveOpenPrice(orderSymbol, orderOpenTime, orderCloseTime, orderOpenPrice, orderRValue);
+  TimeAndRStatistics statisticsBelowOpenPrice = calcSecondsBelowOpenPrice(orderSymbol, orderOpenTime, orderCloseTime, orderOpenPrice, orderRValue);
 
   
 
@@ -69,17 +69,17 @@ int calcSeconds(datetime orderOpenTime, datetime orderCloseTime, double orderOpe
   return orderCloseTime - orderOpenTime;
 }
 
-TimeAndRStatistics calcSecondsAboveOpenPrice(datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, double orderRValue) {
+TimeAndRStatistics calcSecondsAboveOpenPrice(string orderSymbol, datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, double orderRValue) {
   datetime positionInTime = orderOpenTime;
   int seconds = 0;
   double highestPrice = orderOpenPrice;
   
   while(positionInTime < orderCloseTime){
-    int  iWhenM1 = iBarShift(NULL, PERIOD_M1, positionInTime, true);
+    int  iWhenM1 = iBarShift(orderSymbol, PERIOD_M1, positionInTime, true);
     // Calculate just in case if the bar has match
     if(iWhenM1 != -1) {
-      double candleClosePrice = iClose(NULL, PERIOD_M1, iWhenM1);
-      double candleHighestPrice = iHigh(NULL, PERIOD_M1, iWhenM1);
+      double candleClosePrice = iClose(orderSymbol, PERIOD_M1, iWhenM1);
+      double candleHighestPrice = iHigh(orderSymbol, PERIOD_M1, iWhenM1);
       // amount of seconds above open price area
       if(candleClosePrice > orderOpenPrice) {
         seconds++;
@@ -103,18 +103,18 @@ TimeAndRStatistics calcSecondsAboveOpenPrice(datetime orderOpenTime, datetime or
   return timeAndRStatistics;
 }
 
-TimeAndRStatistics calcSecondsBelowOpenPrice(datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, double orderRValue) {
+TimeAndRStatistics calcSecondsBelowOpenPrice(string orderSymbol, datetime orderOpenTime, datetime orderCloseTime, double orderOpenPrice, double orderRValue) {
   datetime positionInTime = orderOpenTime;
 
   int seconds = 0;
   double lowestPrice = orderOpenPrice;
 
   while(positionInTime < orderCloseTime){
-    int  iWhenM1 = iBarShift(NULL, PERIOD_M1, positionInTime, true);
+    int  iWhenM1 = iBarShift(orderSymbol, PERIOD_M1, positionInTime, true);
     // Calculate just in case if the bar has match
     if(iWhenM1 != -1) {
-      double candleClosePrice = iClose(NULL, PERIOD_M1, iWhenM1);
-      double candleLowestPrice = iLow(NULL, PERIOD_M1, iWhenM1);
+      double candleClosePrice = iClose(orderSymbol, PERIOD_M1, iWhenM1);
+      double candleLowestPrice = iLow(orderSymbol, PERIOD_M1, iWhenM1);
       // amount of seconds below open price area
       if(candleClosePrice <= orderOpenPrice) {
         seconds++;
@@ -140,10 +140,11 @@ TimeAndRStatistics calcSecondsBelowOpenPrice(datetime orderOpenTime, datetime or
 
 //+------------------------------------------------------------------+
 //| Calculate lowest and highest value                               |
+//| NOT USED                                                         |
 //+------------------------------------------------------------------+
 void calcLowAndHigh(datetime start, datetime end)
   {
-    string   s           = Symbol();
+    string   s           = OrderSymbol();
     int      p           = Period();
     datetime t1          = start;
     datetime t2          = end;
@@ -157,9 +158,9 @@ void calcLowAndHigh(datetime start, datetime end)
     Print(t1," -> ",t2,":: High = ",high," Low = ",low);
   }
 
-double calcLow(datetime start, datetime end) {
-  string   s           = Symbol();
-  int      p           = Period();
+double calcLow(string symbol, datetime start, datetime end) {
+  string   s           = symbol;
+  int      p           = PERIOD_M1;
   datetime t1          = start;
   datetime t2          = end;
   int      t1_shift    = iBarShift(s,p,t1);
@@ -170,9 +171,9 @@ double calcLow(datetime start, datetime end) {
   return low;
 }
 
-double calcHigh(datetime start, datetime end) {
-  string   s           = Symbol();
-  int      p           = Period();
+double calcHigh(string symbol, datetime start, datetime end) {
+  string   s           = symbol;
+  int      p           = PERIOD_M1;
   datetime t1          = start;
   datetime t2          = end;
   int      t1_shift    = iBarShift(s,p,t1);
