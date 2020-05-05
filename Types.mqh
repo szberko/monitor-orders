@@ -74,7 +74,10 @@ class Order {
       high = c_high;
       type = c_type;
       openPrice = c_openPrice;
-      stopLoss = c_stopLoss;
+      // Write just first Stop Loss value which is different than 0.
+      if (stopLoss == NULL || stopLoss == 0){
+        stopLoss = c_stopLoss;
+      }
       takeProfit = c_takeProfit;
       closePrice = c_closePrice;
       lot = c_lot;

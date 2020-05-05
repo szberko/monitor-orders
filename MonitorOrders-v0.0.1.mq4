@@ -16,7 +16,11 @@
 int OnInit()
   {
 //---
-    getHistory();
+    // History scraping is disabled because we are not able to get
+    // valid Stop Loss value, thus we are not able to calculate
+    // valid values based on that.
+
+    // getHistory();
 //---
    return(INIT_SUCCEEDED);
   }
