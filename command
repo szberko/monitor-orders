@@ -1,1 +1,1 @@
-watch -n 0.1 -c "csvcut -c 'Ticket No.','Net Profit','Balance' dairy_tick.csv | cat | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S"
+watch -n 0.1 -c "csvcut -c 'ticketNo','netProfit','balance','orderStopLoss' current.csv | cat | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S"
